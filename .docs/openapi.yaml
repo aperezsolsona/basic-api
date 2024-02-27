@@ -1,0 +1,243 @@
+openapi: 3.0.0
+info:
+  title: "Basic-API"
+  description: "Boilerplate for a REST api in Go+Fiber+Gorm."
+  version: "1.0.0"
+
+tags:
+  - name: "User Content"
+    description: "Endpoints related with the User"
+  - name: "Pet Content"
+    description: "Endpoints related with the management of templates"
+
+paths:
+
+  /users:
+    get:
+      tags:
+        - "User Content"
+      summary: "Get all users"
+      description: "Returns all users"
+      operationId: "getUsers"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        500:
+          description: "unsuccessful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - "User Content"
+      summary: "Create a new user"
+      description: "Create a new user"
+      operationId: "postUser"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/UserPost"
+      responses:
+        200:
+          description: "successful operation"
+        500:
+          description: "unsuccessful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/{userId}:
+    get:
+      tags:
+        - "User Content"
+      summary: "Get user by id"
+      description: "Returns user by id"
+      operationId: "getUserById"
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        500:
+          description: "unsuccessful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /pets:
+    get:
+      tags:
+        - "Pet Content"
+      summary: "Get all pets"
+      description: "Returns all pets"
+      operationId: "getPets"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        500:
+          description: "unsuccessful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - "Pet Content"
+      summary: "Create a new pet"
+      description: "Create a new pet"
+      operationId: "postPet"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PetPost"
+      responses:
+        200:
+          description: "successful operation"
+        500:
+          description: "unsuccessful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /pets/{petsId}:
+    get:
+      tags:
+        - "Pet Content"
+      summary: "Get pet by id"
+      description: "Returns pet by id"
+      operationId: "getPetById"
+      parameters:
+        - $ref: "#/components/parameters/petsId"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        500:
+          description: "unsuccessful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /pet-types:
+    get:
+      tags:
+        - "Pet Content"
+      summary: "Get all pet types"
+      description: "Returns all pet types"
+      operationId: "getPetTypes"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+        500:
+          description: "unsuccessful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  parameters:
+    userId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: User ID (UUID)
+    petId:
+      name: petId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Pet ID (UUID)
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Database failed
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 69f393a5-07b4-4c05-afaa-916c7bf1d7f9
+        name:
+          type: string
+          example: Alex Perez
+        email:
+          type: string
+          example: alex@perez.com
+    UserPost:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Alex Perez
+        email:
+          type: string
+          example: alex@perez.com
+    Pet:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 69f393a5-07b4-4c05-afaa-916c7bf1d7f9
+        name:
+          type: string
+          example: Cora
+        pet_type_id:
+          type: integer
+          example: 0
+        pet_type:
+          type: object
+          $ref: "#/components/schemas/PetType"
+    PetPost:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Cora
+        pet_type_id:
+          type: integer
+          example: 0
+    PetType:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Dog
+
+externalDocs:
+  description: "Basic-api github page"
+  url: "https://github.com/aperezsolsona/basic-api"

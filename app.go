@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	database.ConnectDb(true)
+	database.ConnectDb(true, false)
 	app := fiber.New()
 	setupRoutes(app)
 	app.Listen(":3000")
@@ -15,8 +15,14 @@ func main() {
 
 func setupRoutes(app *fiber.App) {
 	app.Get("/", handlers.Home)
-	app.Get("/user", handlers.ListUsers)
-	app.Post("/user", handlers.CreateUser)
-	// Add new route to show single User, given `:id`
-	app.Get("/user/:id", handlers.ShowUser)
+
+	app.Get("/users", handlers.ListUsers)
+	app.Get("/users/:id", handlers.ShowUser)
+	app.Post("/users", handlers.CreateUser)
+
+	app.Get("/pets", handlers.ListPets)
+	app.Get("/pets/:id", handlers.ShowPet)
+	app.Post("/pets", handlers.CreatePet)
+
+	app.Get("/pet-types", handlers.ListPetTypes)
 }

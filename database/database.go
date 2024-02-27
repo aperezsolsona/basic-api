@@ -17,7 +17,7 @@ type Dbinstance struct {
 
 var DB Dbinstance
 
-func ConnectDb(isMigration bool) {
+func ConnectDb(isMigration bool, createFixtures bool) {
 	dsn := fmt.Sprintf(
 		"host=db user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Madrid",
 		os.Getenv("DB_USER"),
@@ -40,7 +40,9 @@ func ConnectDb(isMigration bool) {
 	if isMigration {
 		log.Println("Running DB migrations")
 		db.AutoMigrate(&models.User{}, &models.PetType{}, &models.Pet{})
+	}
 
+	if createFixtures {
 		// Create pet types
 		petType1 := models.PetType{Name: "Dog"}
 		petType2 := models.PetType{Name: "Cat"}

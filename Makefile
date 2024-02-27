@@ -20,6 +20,9 @@ upd: ## Up the containers in background
 
 down: ## down the containers
 	docker compose down
-	
+
 in: ## connect to api container shell
 	docker compose run -it basic-api sh
+
+test: ## executes tests
+	go test
