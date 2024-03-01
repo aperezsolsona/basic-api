@@ -14,12 +14,12 @@ type PetTypeResponse struct {
 
 func ListPetTypes(c *fiber.Ctx) error {
 	petTypes := []models.PetType{}
-	database.DB.Db.Find(&petTypes)
+	database.DbInstance.Db.Find(&petTypes)
 
-	return c.Status(200).JSON(mapPetTypeResponses(petTypes))
+	return c.Status(200).JSON(MapResponses(petTypes))
 }
 
-func mapPetTypeResponse(petType models.PetType) PetTypeResponse {
+func MapResponse(petType models.PetType) PetTypeResponse {
 
 	petTypeResponse := PetTypeResponse{
 		ID:   petType.ID,
@@ -29,11 +29,11 @@ func mapPetTypeResponse(petType models.PetType) PetTypeResponse {
 	return petTypeResponse
 }
 
-func mapPetTypeResponses(petTypes []models.PetType) []PetTypeResponse {
+func MapResponses(petTypes []models.PetType) []PetTypeResponse {
 
 	var petTypeResponses []PetTypeResponse
 	for _, petType := range petTypes {
-		petTypeResponses = append(petTypeResponses, mapPetTypeResponse(petType))
+		petTypeResponses = append(petTypeResponses, MapResponse(petType))
 	}
 
 	return petTypeResponses

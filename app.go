@@ -7,14 +7,14 @@ import (
 )
 
 func main() {
-	database.ConnectDb(true, false)
+	database.Connect(true, false)
 	app := fiber.New()
-	setupRoutes(app)
+	SetupRoutes(app)
 	app.Listen(":3000")
 }
 
-func setupRoutes(app *fiber.App) {
-	app.Get("/", handlers.Home)
+func SetupRoutes(app *fiber.App) {
+	app.Get("/", Ping)
 
 	app.Get("/users", handlers.ListUsers)
 	app.Get("/users/:id", handlers.ShowUser)
@@ -25,4 +25,8 @@ func setupRoutes(app *fiber.App) {
 	app.Post("/pets", handlers.CreatePet)
 
 	app.Get("/pet-types", handlers.ListPetTypes)
+}
+
+func Ping(c *fiber.Ctx) error {
+	return c.Status(200).JSON(fiber.Map{"message": "Basic-API is running!"})
 }

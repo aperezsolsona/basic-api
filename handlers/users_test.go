@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestMapUserResponse(t *testing.T) {
+func TestMapResponse(t *testing.T) {
 	testuuid := uuid.New()
 	testuser := models.User{
 		ID:    testuuid,
@@ -15,7 +15,7 @@ func TestMapUserResponse(t *testing.T) {
 		Email: "a@a.es",
 	}
 
-	result := mapUserResponse(testuser)
+	result := MapResponse(testuser)
 
 	userResponseExpected := UserResponse{
 		ID:    testuuid,

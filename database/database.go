@@ -11,13 +11,13 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-type Dbinstance struct {
+type Instance struct {
 	Db *gorm.DB
 }
 
-var DB Dbinstance
+var DbInstance Instance
 
-func ConnectDb(isMigration bool, createFixtures bool) {
+func Connect(isMigration bool, createFixtures bool) {
 	dsn := fmt.Sprintf(
 		"host=db user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Madrid",
 		os.Getenv("DB_USER"),
@@ -50,7 +50,7 @@ func ConnectDb(isMigration bool, createFixtures bool) {
 		db.Create(&petType2)
 	}
 
-	DB = Dbinstance{
+	DbInstance = Instance{
 		Db: db,
 	}
 }

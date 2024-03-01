@@ -14,24 +14,19 @@ type UserResponse struct {
 	Email string    `json:"email"`
 }
 
-func Home(c *fiber.Ctx) error {
-	// TODO openAPI
-	return c.SendString("This should be some sort of OpenAPI!")
-}
-
 func ListUsers(c *fiber.Ctx) error {
 	users := []models.User{}
-	database.DB.Db.Find(&users)
+	database.DbInstance.Db.Find(&users)
 
-	return c.Status(200).JSON(mapUserResponses(users))
+	return c.Status(200).JSON(MapResponses(users))
 }
 
 func ShowUser(c *fiber.Ctx) error {
 	user := models.User{}
 	id := c.Params("id") // from URL
-	database.DB.Db.Where("id = ?", id).First(&user)
+	database.DbInstance.Db.Where("id = ?", id).First(&user)
 
-	return c.Status(200).JSON(mapUserResponse(user))
+	return c.Status(200).JSON(MapResponse(user))
 }
 
 func CreateUser(c *fiber.Ctx) error {
@@ -59,12 +54,12 @@ func CreateUser(c *fiber.Ctx) error {
 		Email: requestBody.Email,
 	}
 
-	database.DB.Db.Create(&user)
+	database.DbInstance.Db.Create(&user)
 
 	return c.Status(200).JSON(user)
 }
 
-func mapUserResponse(user models.User) UserResponse {
+func MapResponse(user models.User) UserResponse {
 
 	userResponse := UserResponse{
 		ID:    user.ID,
@@ -75,11 +70,11 @@ func mapUserResponse(user models.User) UserResponse {
 	return userResponse
 }
 
-func mapUserResponses(users []models.User) []UserResponse {
+func MapResponses(users []models.User) []UserResponse {
 
 	var userResponses []UserResponse
 	for _, user := range users {
-		userResponses = append(userResponses, mapUserResponse(user))
+		userResponses = append(userResponses, MapResponse(user))
 	}
 
 	return userResponses

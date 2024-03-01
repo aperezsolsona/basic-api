@@ -16,17 +16,17 @@ type PetResponse struct {
 
 func ListPets(c *fiber.Ctx) error {
 	pets := []models.Pet{}
-	database.DB.Db.Preload("PetType").Find(&pets)
+	database.DbInstance.Db.Preload("PetType").Find(&pets)
 
-	return c.Status(200).JSON(mapPetResponses(pets))
+	return c.Status(200).JSON(MapResponses(pets))
 }
 
 func ShowPet(c *fiber.Ctx) error {
 	pet := models.Pet{}
 	id := c.Params("id") // from URL
-	database.DB.Db.Where("id = ?", id).Preload("PetType").First(&pet)
+	database.DbInstance.Db.Where("id = ?", id).Preload("PetType").First(&pet)
 
-	return c.Status(200).JSON(mapPetResponse(pet))
+	return c.Status(200).JSON(MapResponse(pet))
 }
 
 func CreatePet(c *fiber.Ctx) error {
@@ -47,7 +47,7 @@ func CreatePet(c *fiber.Ctx) error {
 
 	// Validate Pet Type ID
 	petType := models.PetType{}
-	result := database.DB.Db.Where("id = ?", requestBody.PetTypeID).First(&petType)
+	result := database.DbInstance.Db.Where("id = ?", requestBody.PetTypeID).First(&petType)
 	if result.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Pet Type does not exist!",
@@ -64,12 +64,12 @@ func CreatePet(c *fiber.Ctx) error {
 		PetTypeID: requestBody.PetTypeID,
 	}
 
-	database.DB.Db.Create(&pet)
+	database.DbInstance.Db.Create(&pet)
 
 	return c.Status(200).JSON(pet)
 }
 
-func mapPetResponse(pet models.Pet) PetResponse {
+func MapResponse(pet models.Pet) PetResponse {
 
 	petResponse := PetResponse{
 		ID:          pet.ID,
@@ -80,11 +80,11 @@ func mapPetResponse(pet models.Pet) PetResponse {
 	return petResponse
 }
 
-func mapPetResponses(pets []models.Pet) []PetResponse {
+func MapResponses(pets []models.Pet) []PetResponse {
 
 	var petResponses []PetResponse
 	for _, pet := range pets {
-		petResponses = append(petResponses, mapPetResponse(pet))
+		petResponses = append(petResponses, MapResponse(pet))
 	}
 
 	return petResponses
